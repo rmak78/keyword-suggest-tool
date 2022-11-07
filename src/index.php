@@ -497,7 +497,8 @@ div.pagination{font-size:11px;text-align:center;padding:2px 4px 2px 0;color:#ccc
             <p
               class="my-6 text-xs font-semibold text-gray-600 dark:text-gray-400"
             >
-             Copyright &copy; 2022 <a href="https://www.sutlej.net" target="_blank">Sutlej Solutions</a> <br /> Version: 1.0.2
+             Copyright &copy; 2022 <a href="https://www.sutlej.net" target="_blank">Developed By Sutlej Solutions</a> |  
+		    Download Your Copy from GitHub <a href="https://github.com/rmak78/keyword-suggest-tool" >Keyword Suggest Tool<a><br /> Version: 1.0.2
             </p>
           </div>
         </main>
