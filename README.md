@@ -6,6 +6,8 @@ __Yahoo__
 __Youtube__
 __Amazon__
 __eBay__
+
+# screenshot
 ![Screensot of the Keyword Tool](/screenshot.png?raw=true "Application Sceen")
 All you need is to provide a list of keywords and press Start Searching. Once the required number of keywords are acquired. press stop and click export to save them in a comma delimited format. future versions will include ability to filter tags and export as excel or .csv file.
 
