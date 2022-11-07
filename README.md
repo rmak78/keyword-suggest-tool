@@ -1,11 +1,12 @@
 # keyword-suggest-tool
 Keyword suggest tool is a simple tool that provides you keyword suggestion from muliple search engines like
-## Google
-## Bing
-## Yahoo
-## Youtube
-## Amazon
-## eBay
+__Google__
+__Bing__
+__Yahoo__
+__Youtube__
+__Amazon__
+__eBay__
+`![my screenshot](screenshot.png)`
 All you need is to provide a list of keywords and press Start Searching. Once the required number of keywords are acquired. press stop and click export to save them in a comma delimited format. future versions will include ability to filter tags and export as excel or .csv file.
 
 ### How to Install
