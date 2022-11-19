@@ -361,7 +361,7 @@ div.pagination{font-size:11px;text-align:center;padding:2px 4px 2px 0;color:#ccc
 
 			if(engine == "ebay"){
 	            $.ajax({
-	                url: "https://autosug.ebay.com/autosug",
+	                url: "https://autosug.ebay.co.uk/autosug",
 	                dataType: "jsonp",
 	                data: {
 	                kwd: querykeyword,
