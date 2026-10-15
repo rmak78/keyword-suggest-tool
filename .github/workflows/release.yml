@@ -1,0 +1,57 @@
+name: Release
+
+# Publishes a GitHub release with a ready-to-upload zip of dist/.
+# Trigger it by pushing a tag:   git tag v2.0.0 && git push origin v2.0.0
+# or from the Actions tab via "Run workflow" with a tag name.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v2.0.0). Must already exist.'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: curl, json, mbstring
+
+      - run: npm ci
+      - run: npm run lint:php
+      - run: npm test
+      - run: npm run build
+
+      - name: Package dist
+        id: pkg
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          (cd dist && zip -qr "../keyword-suggest-tool-$TAG.zip" .)
+          ls -la "keyword-suggest-tool-$TAG.zip"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.pkg.outputs.tag }}
+          name: Keyword Suggest Tool ${{ steps.pkg.outputs.tag }}
+          body_path: RELEASE_NOTES.md
+          files: keyword-suggest-tool-${{ steps.pkg.outputs.tag }}.zip
+          fail_on_unmatched_files: true
