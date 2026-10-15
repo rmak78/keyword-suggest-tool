@@ -1,0 +1,4 @@
+# Only the two endpoints are meant to be requested directly.
+<FilesMatch "^(lib|registry|google|youtube|bing|yahoo|duckduckgo|qwant|yandex|amazon|ebay|wikipedia|appstore)\.php$">
+    Require all denied
+</FilesMatch>

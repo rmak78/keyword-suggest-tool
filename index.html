@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keyword Suggest Tool</title>
+    <meta name="description" content="Free keyword idea generator. Pulls autocomplete suggestions from Google, YouTube, Bing, Yahoo, DuckDuckGo, Amazon, eBay, Wikipedia and more." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%237c3aed'/%3E%3Ccircle cx='14' cy='14' r='6.5' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M19 19l6 6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      // Apply the stored theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('kst.theme') || 'system';
+        var d = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        if (d) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="min-h-screen">
+    <header class="sticky top-0 z-20 border-b border-slate-200/80 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <a href="./" class="flex items-center gap-2.5">
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 text-white shadow-sm">
+            <svg class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5" /><path d="M12.5 12.5 17 17" /></svg>
+          </span>
+          <span class="text-base font-bold tracking-tight">Keyword Suggest</span>
+          <span class="hidden rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500 sm:inline dark:bg-slate-800 dark:text-slate-400">v2.0</span>
+        </a>
+        <div class="flex items-center gap-1">
+          <a href="https://github.com/rmak78/keyword-suggest-tool" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" title="GitHub">
+            <svg class="h-4 w-4" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+            <span class="hidden sm:inline">GitHub</span>
+          </a>
+          <button id="theme-toggle" type="button" class="btn btn-ghost btn-sm" title="Toggle theme (auto / light / dark)">
+            <svg class="h-4 w-4 dark:hidden" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-5a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2h1ZM4 10a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm11.66-4.24a1 1 0 0 1-1.42 0l-.7-.71a1 1 0 0 1 1.41-1.41l.71.7a1 1 0 0 1 0 1.42ZM6.46 14.95a1 1 0 0 1-1.41 0l-.71-.7a1 1 0 0 1 1.41-1.42l.71.71a1 1 0 0 1 0 1.41Zm8.49 0a1 1 0 0 1 0-1.41l.7-.71a1 1 0 0 1 1.42 1.42l-.71.7a1 1 0 0 1-1.41 0ZM5.05 6.46a1 1 0 0 1-1.41-1.41l.7-.71a1 1 0 0 1 1.42 1.41l-.71.71ZM10 16a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Z"/></svg>
+            <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 20 20" fill="currentColor"><path d="M17.3 13.2A8 8 0 0 1 6.8 2.7a8 8 0 1 0 10.5 10.5Z"/></svg>
+            <span id="theme-label">Auto</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">SEO Keyword Idea Generator</h1>
+        <p class="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+          Enter seed keywords, pick your sources, and collect hundreds of real autocomplete suggestions from search engines and marketplaces. Everything runs from your own server, no API keys needed.
+        </p>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
+        <!-- Left: controls -->
+        <aside class="space-y-4 lg:sticky lg:top-20 lg:self-start">
+          <section class="card p-4">
+            <label for="seeds" class="label">Seed keywords <span class="font-normal text-slate-400">(one per line)</span></label>
+            <textarea id="seeds" rows="5" class="input resize-y font-mono text-[13px]" placeholder="running shoes&#10;protein powder&#10;…" autofocus></textarea>
+
+            <div class="mt-4 flex items-center justify-between">
+              <span class="label mb-0">Sources</span>
+              <div class="flex gap-1">
+                <button id="select-all" type="button" class="btn btn-ghost btn-sm">All</button>
+                <button id="select-none" type="button" class="btn btn-ghost btn-sm">None</button>
+                <button id="recheck" type="button" class="btn btn-ghost btn-sm" title="Re-check which engines respond from this server">
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10a6 6 0 1 1-1.76-4.24"/><path d="M16 3v3.5h-3.5"/></svg>
+                  Check
+                </button>
+              </div>
+            </div>
+            <div id="engines" class="mt-2 space-y-3"></div>
+            <p id="server-info" class="mt-2 text-[11px] text-slate-400">Checking engines…</p>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <div>
+                <label for="locale" class="label">Language / market</label>
+                <select id="locale" class="input"></select>
+              </div>
+              <div>
+                <label for="depth" class="label">Depth</label>
+                <select id="depth" class="input">
+                  <option value="0">Seeds only</option>
+                  <option value="1">1 level deeper</option>
+                  <option value="2">2 levels deeper</option>
+                </select>
+              </div>
+            </div>
+
+            <details class="group mt-4">
+              <summary class="flex cursor-pointer items-center gap-1 text-sm font-medium text-slate-600 select-none dark:text-slate-300">
+                <svg class="h-4 w-4 transition group-open:rotate-90" viewBox="0 0 20 20" fill="currentColor"><path d="M7.3 5.3a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 0 1-1.4-1.4L10.6 10 7.3 6.7a1 1 0 0 1 0-1.4Z"/></svg>
+                Expansion options
+              </summary>
+              <div class="mt-3 space-y-2 text-sm">
+                <label class="flex items-center gap-2"><input id="opt-letters" type="checkbox" class="rounded border-slate-300 text-violet-600 focus:ring-violet-500" /> Append a–z <span class="text-slate-400">(“shoes a”, “shoes b”…)</span></label>
+                <label class="flex items-center gap-2"><input id="opt-digits" type="checkbox" class="rounded border-slate-300 text-violet-600 focus:ring-violet-500" /> Append 0–9</label>
+                <label class="flex items-center gap-2"><input id="opt-modifiers" type="checkbox" class="rounded border-slate-300 text-violet-600 focus:ring-violet-500" /> Prepend questions &amp; modifiers <span class="text-slate-400">(how, best, vs…)</span></label>
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <label for="opt-max" class="label">Max keywords</label>
+                    <input id="opt-max" type="number" min="10" step="50" class="input" />
+                  </div>
+                  <div>
+                    <label for="opt-delay" class="label">Delay per engine (ms)</label>
+                    <input id="opt-delay" type="number" min="0" step="50" class="input" />
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <div class="mt-4 flex gap-2">
+              <button id="start" type="button" class="btn btn-primary flex-1">Start searching</button>
+              <button id="clear" type="button" class="btn btn-secondary" title="Clear seeds and results">Clear</button>
+            </div>
+            <p class="mt-2 text-[11px] text-slate-400"><kbd class="rounded border border-slate-300 px-1 dark:border-slate-700">Ctrl</kbd>+<kbd class="rounded border border-slate-300 px-1 dark:border-slate-700">Enter</kbd> to start · <kbd class="rounded border border-slate-300 px-1 dark:border-slate-700">Esc</kbd> to stop</p>
+          </section>
+
+          <section class="card p-4">
+            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span id="progress-text">Idle</span>
+              <span id="current-query" class="max-w-[60%] truncate font-mono text-[11px]"></span>
+            </div>
+            <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+              <div id="progress-bar" class="h-full w-0 rounded-full bg-violet-600 transition-[width] duration-300"></div>
+            </div>
+            <div id="engine-stats" class="mt-3 flex flex-wrap gap-1.5"></div>
+          </section>
+        </aside>
+
+        <!-- Right: results -->
+        <section class="card flex min-h-[480px] flex-col">
+          <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 p-3 dark:border-slate-800">
+            <div class="relative min-w-[180px] flex-1">
+              <svg class="pointer-events-none absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5" /><path d="M12.5 12.5 17 17" /></svg>
+              <input id="filter" type="search" class="input pl-8" placeholder="Filter results…" />
+            </div>
+            <select id="source-filter" class="input w-auto"></select>
+            <select id="sort" class="input w-auto">
+              <option value="order">Order found</option>
+              <option value="keyword">A → Z</option>
+              <option value="sources">Most sources</option>
+              <option value="depth">Depth</option>
+            </select>
+            <span id="count" class="ml-auto text-xs font-medium text-slate-500 dark:text-slate-400">0 keywords</span>
+            <div class="flex gap-1">
+              <button id="copy-all" type="button" class="btn btn-secondary btn-sm" disabled title="Copy visible keywords">Copy</button>
+              <button id="export-txt" type="button" class="btn btn-secondary btn-sm" disabled title="Download visible keywords as text">TXT</button>
+              <button id="export-csv" type="button" class="btn btn-primary btn-sm" disabled title="Download visible keywords as CSV (opens in Excel)">CSV</button>
+            </div>
+          </div>
+
+          <div id="categories" class="hidden flex-wrap items-center gap-1 border-b border-slate-200 px-3 py-2 dark:border-slate-800"></div>
+
+          <div class="relative flex-1 overflow-auto">
+            <div id="empty" class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center text-slate-400">
+              <svg class="h-10 w-10 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+              <p class="text-sm">No results yet. Add a seed keyword and press <strong>Start searching</strong>.</p>
+            </div>
+            <table class="w-full text-sm">
+              <thead class="sticky top-0 z-10 bg-slate-50 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase dark:bg-slate-900 dark:text-slate-400">
+                <tr>
+                  <th class="px-3 py-2 text-right">#</th>
+                  <th class="px-3 py-2">Keyword</th>
+                  <th class="px-3 py-2">Sources</th>
+                  <th class="hidden px-3 py-2 text-center sm:table-cell">Depth</th>
+                  <th class="hidden px-3 py-2 md:table-cell">Seed</th>
+                  <th class="px-2 py-2"></th>
+                </tr>
+              </thead>
+              <tbody id="results"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="mx-auto max-w-7xl px-4 py-8 text-center text-xs text-slate-400 sm:px-6">
+      © 2022–2026 <a href="https://bixisoft.com" target="_blank" rel="noopener" class="font-medium hover:text-violet-600">Bixisoft</a> ·
+      Open source on <a href="https://github.com/rmak78/keyword-suggest-tool" target="_blank" rel="noopener" class="font-medium hover:text-violet-600">GitHub</a> ·
+      Suggestions come from each engine's public autocomplete and are not affiliated with or endorsed by them.
+    </footer>
+
+    <div id="toast" class="pointer-events-none fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-sm font-medium opacity-0 shadow-lg transition-opacity"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
