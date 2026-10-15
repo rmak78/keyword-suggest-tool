@@ -1,0 +1,23 @@
+{
+  "name": "keyword-suggest-tool",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Keyword suggestion / idea generator pulling autocomplete data from Google, YouTube, Bing, Yahoo, DuckDuckGo, Amazon, eBay, Wikipedia and more.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "php": "php -S localhost:8080 -t public",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint:php": "find public/api -name '*.php' -print0 | xargs -0 -n1 php -l"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.6.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.0"
+  }
+}
