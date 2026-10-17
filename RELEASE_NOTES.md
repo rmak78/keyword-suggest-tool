@@ -13,7 +13,7 @@ Version 2.1 brings the keyword engine into WordPress and OpenCart. Both plugins 
 - Adds a **Keyword Suggestions** box to posts, pages and WooCommerce products (block editor and classic editor).
 - Seeds are extracted automatically from the title and content; edit them freely.
 - Click a suggestion to **add it as a tag**, **set it as the focus keyword** (Yoast SEO, Rank Math), **insert it into the content** at the cursor, or copy it. "Add all shown as tags" for bulk.
-- Settings > Keyword Suggest: default sources, market, suggestions per source, which post types show the box.
+- Settings > Keyword Suggest: default sources, market, suggestions per source, which post types show the box, and a one-click **Test sources from this server**.
 - In the block editor the box lives in the collapsible **Meta Boxes** area at the bottom of the editor.
 
 ## OpenCart 4 extension
@@ -21,12 +21,16 @@ Version 2.1 brings the keyword engine into WordPress and OpenCart. Both plugins 
 - Adds a **Keyword suggestions** panel to the General tab of the product form.
 - Seeds come from the product name, meta title and description.
 - Click a suggestion to add it to **Meta Tag Keywords**, **Product Tags**, or insert it into the **Description** at the cursor; or copy it. Works per language tab.
-- Extensions > Modules > Keyword Suggest: status, default sources, market, suggestions per source.
+- Extensions > Modules > Keyword Suggest: status, default sources, market, suggestions per source, and a one-click **Test sources from this server**.
 - Tested on OpenCart 4.1.0.4.
 
 ## Web tool
 
 - No functional change since 2.0.0. The engine adapters are now namespaced (`KeywordSuggest\…`) so they can be bundled inside other software.
+
+## Directory listings
+
+Artwork (icons, banners, screenshots) and ready-to-paste listing copy for wordpress.org and the OpenCart Marketplace are in `plugins/*/assets/` and `docs/directory-submissions.md`.
 
 ## Requirements
 

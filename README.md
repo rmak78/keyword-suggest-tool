@@ -42,7 +42,7 @@ Download the zips from the [latest release](https://github.com/rmak78/keyword-su
 - **WordPress**: Plugins > Add New > Upload Plugin > `keyword-suggest-wordpress-*.zip`. Settings under Settings > Keyword Suggest. The box appears below the editor (in the block editor, expand the **Meta Boxes** bar at the bottom).
 - **OpenCart 4**: Extensions > Installer > Upload `keyword_suggest.ocmod.zip`, click Install, then Extensions > Extensions > Modules > Keyword Suggest > Install. The panel appears on the General tab of every product form.
 
-To build the zips yourself: `npm run build:plugins` writes them to `build/`. The shared PHP library (`public/api/lib.php`, `keyphrases.php`, `engines/`) is copied into each plugin at build time, so engine fixes land in all three products at once.
+To build the zips yourself: `npm run build:plugins` writes them to `build/`. Directory artwork and listing copy for wordpress.org and the OpenCart Marketplace are in `plugins/*/assets/` and [`docs/directory-submissions.md`](docs/directory-submissions.md). The shared PHP library (`public/api/lib.php`, `keyphrases.php`, `engines/`) is copied into each plugin at build time, so engine fixes land in all three products at once.
 
 ## Deploying the web tool to shared hosting (cPanel, Plesk, FastPanel…)
 

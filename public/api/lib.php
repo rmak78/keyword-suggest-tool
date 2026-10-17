@@ -31,6 +31,22 @@ const KS_LOCALES = [
     'ja-JP' => ['ja', 'JP'],
 ];
 
+/** Human-readable names for KS_LOCALES. */
+const KS_LOCALE_LABELS = [
+    'en-US' => 'English (United States)',
+    'en-GB' => 'English (United Kingdom)',
+    'en-AU' => 'English (Australia)',
+    'en-CA' => 'English (Canada)',
+    'en-IN' => 'English (India)',
+    'de-DE' => 'Deutsch (Deutschland)',
+    'fr-FR' => 'Français (France)',
+    'es-ES' => 'Español (España)',
+    'it-IT' => 'Italiano (Italia)',
+    'nl-NL' => 'Nederlands (Nederland)',
+    'pt-BR' => 'Português (Brasil)',
+    'ja-JP' => '日本語 (日本)',
+];
+
 function json_out(array $payload, int $status = 200): void
 {
     http_response_code($status);

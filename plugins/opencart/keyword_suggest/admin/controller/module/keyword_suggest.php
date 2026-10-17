@@ -60,6 +60,7 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
     {
         $this->load->language(self::ROUTE);
         $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->addStyle(HTTP_CATALOG . 'extension/keyword_suggest/admin/view/stylesheet/keyword_suggest.css?v=2.1.0');
         $this->loadApi();
 
         $token = 'user_token=' . $this->session->data['user_token'];
@@ -77,8 +78,16 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
         $data['module_keyword_suggest_engines'] = $s['engines'];
         $data['module_keyword_suggest_locale'] = $s['locale'];
         $data['module_keyword_suggest_limit'] = $s['limit'];
+        $groups = [];
+        foreach (self::ENGINES as $id => $e) {
+            $groups[$e['group']][$id] = $e;
+        }
+        $data['engine_groups'] = $groups;
         $data['engines'] = self::ENGINES;
-        $data['locales'] = array_keys(\KeywordSuggest\KS_LOCALES);
+        $data['locales'] = \KeywordSuggest\KS_LOCALE_LABELS;
+        $data['health'] = html_entity_decode($this->url->link(self::ROUTE . '.health', $token), ENT_QUOTES, 'UTF-8');
+        $data['version'] = '2.1.0';
+        $data['assets'] = HTTP_CATALOG . 'extension/keyword_suggest/admin/view/';
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -203,6 +212,33 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
     }
 
     // --- AJAX ---------------------------------------------------------------
+
+    /** One live query for one engine; the settings page calls this per source. */
+    public function health(): void
+    {
+        $json = [];
+        if (!$this->user->hasPermission('access', self::ROUTE)) {
+            $json['error'] = 'Permission denied';
+        } else {
+            $this->loadApi();
+            $engine = (string) ($this->request->get['engine'] ?? '');
+            if (!isset(self::ENGINES[$engine])) {
+                $json['error'] = 'Unknown engine';
+            } else {
+                $r = \KeywordSuggest\run_engine($engine, 'running shoes', $this->settings()['locale'], false);
+                $json = [
+                    'engine' => $engine,
+                    'ok' => $r['error'] === null && count($r['suggestions']) > 0,
+                    'count' => count($r['suggestions']),
+                    'sample' => array_slice($r['suggestions'], 0, 3),
+                    'error' => $r['error'] ?? (count($r['suggestions']) === 0 ? 'No suggestions returned' : null),
+                    'ms' => $r['ms'],
+                ];
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     private function denied(): bool
     {

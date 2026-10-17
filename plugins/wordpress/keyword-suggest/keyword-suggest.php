@@ -266,66 +266,164 @@ function ksug_render_settings_page(): void
         return;
     }
     $s = ksug_settings();
+    $engines = ksug_engines();
+    $groups = [];
+    foreach ($engines as $id => $e) {
+        $groups[$e['group']][$id] = $e;
+    }
     $types = get_post_types(['show_ui' => true], 'objects');
     unset($types['attachment']);
+    $opt = esc_attr(KSUG_OPTION);
     ?>
-    <div class="wrap">
-        <h1><?php esc_html_e('Keyword Suggest', 'keyword-suggest'); ?></h1>
-        <form method="post" action="options.php">
-            <?php settings_fields('keyword_suggest'); ?>
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><?php esc_html_e('Default sources', 'keyword-suggest'); ?></th>
-                    <td>
-                        <?php foreach (ksug_engines() as $id => $e) : ?>
-                            <label style="display:inline-block;min-width:11em;margin:0 0 6px">
-                                <input type="checkbox" name="<?php echo esc_attr(KSUG_OPTION); ?>[engines][]" value="<?php echo esc_attr($id); ?>" <?php checked(in_array($id, $s['engines'], true)); ?>>
-                                <?php echo esc_html($e['label']); ?>
-                            </label>
-                        <?php endforeach; ?>
-                        <p class="description"><?php esc_html_e('Pre-selected in the editor; you can change them per post.', 'keyword-suggest'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="ksug-locale"><?php esc_html_e('Default market', 'keyword-suggest'); ?></label></th>
-                    <td>
-                        <select id="ksug-locale" name="<?php echo esc_attr(KSUG_OPTION); ?>[locale]">
-                            <?php foreach (array_keys(\KeywordSuggest\KS_LOCALES) as $code) : ?>
-                                <option value="<?php echo esc_attr($code); ?>" <?php selected($code, $s['locale']); ?>><?php echo esc_html($code); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row"><label for="ksug-limit"><?php esc_html_e('Suggestions per source and seed', 'keyword-suggest'); ?></label></th>
-                    <td><input id="ksug-limit" type="number" min="3" max="25" name="<?php echo esc_attr(KSUG_OPTION); ?>[limit]" value="<?php echo esc_attr((string) $s['limit']); ?>" class="small-text"></td>
-                </tr>
-                <tr>
-                    <th scope="row"><?php esc_html_e('Show on', 'keyword-suggest'); ?></th>
-                    <td>
+    <div class="wrap ksug-settings">
+        <div class="ksug-hero">
+            <div class="ksug-hero-icon" aria-hidden="true">
+                <svg viewBox="0 0 64 64" width="44" height="44"><rect width="64" height="64" rx="14" fill="#7c3aed"/><circle cx="28" cy="28" r="12" fill="none" stroke="#fff" stroke-width="5"/><path d="M37 37l11 11" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="16" r="3.5" fill="#fbbf24"/><circle cx="14" cy="47" r="2.5" fill="#34d399"/></svg>
+            </div>
+            <div>
+                <h1><?php esc_html_e('Keyword Suggest', 'keyword-suggest'); ?> <span class="ksug-version">v<?php echo esc_html(KSUG_VERSION); ?></span></h1>
+                <p><?php esc_html_e('Keyword ideas from real search autocomplete, inside your editor. Pick the sources and market to pre-select; everything can still be changed per post.', 'keyword-suggest'); ?></p>
+            </div>
+        </div>
+
+        <div class="ksug-grid">
+            <form method="post" action="options.php" class="ksug-main">
+                <?php settings_fields('keyword_suggest'); ?>
+
+                <section class="ksug-card">
+                    <header>
+                        <h2><?php esc_html_e('Default sources', 'keyword-suggest'); ?></h2>
+                        <div class="ksug-card-actions">
+                            <button type="button" class="button-link" data-ksug-select="all"><?php esc_html_e('Select all', 'keyword-suggest'); ?></button>
+                            <span aria-hidden="true">·</span>
+                            <button type="button" class="button-link" data-ksug-select="none"><?php esc_html_e('None', 'keyword-suggest'); ?></button>
+                        </div>
+                    </header>
+                    <p class="description"><?php esc_html_e('Each source is a public autocomplete endpoint. Nothing is sent anywhere else, and no API keys are needed.', 'keyword-suggest'); ?></p>
+                    <?php foreach ($groups as $group => $items) : ?>
+                        <div class="ksug-group">
+                            <div class="ksug-group-title"><?php echo esc_html($group); ?></div>
+                            <div class="ksug-tiles">
+                                <?php foreach ($items as $id => $e) : ?>
+                                    <label class="ksug-tile">
+                                        <input type="checkbox" name="<?php echo $opt; ?>[engines][]" value="<?php echo esc_attr($id); ?>" <?php checked(in_array($id, $s['engines'], true)); ?>>
+                                        <span class="ksug-tile-body">
+                                            <i class="ksug-dot ksug-dot-<?php echo esc_attr($id); ?>"></i>
+                                            <span><?php echo esc_html($e['label']); ?></span>
+                                            <em class="ksug-tile-status" data-ksug-status="<?php echo esc_attr($id); ?>"></em>
+                                        </span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </section>
+
+                <section class="ksug-card">
+                    <header><h2><?php esc_html_e('Suggestions', 'keyword-suggest'); ?></h2></header>
+                    <div class="ksug-fields">
+                        <div class="ksug-field">
+                            <label for="ksug-locale"><?php esc_html_e('Default market', 'keyword-suggest'); ?></label>
+                            <select id="ksug-locale" name="<?php echo $opt; ?>[locale]">
+                                <?php foreach (\KeywordSuggest\KS_LOCALES as $code => $_) : ?>
+                                    <option value="<?php echo esc_attr($code); ?>" <?php selected($code, $s['locale']); ?>><?php echo esc_html(\KeywordSuggest\KS_LOCALE_LABELS[$code] ?? $code); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <p class="description"><?php esc_html_e('Sets the language and country for every source, and the Amazon / eBay marketplace.', 'keyword-suggest'); ?></p>
+                        </div>
+                        <div class="ksug-field">
+                            <label for="ksug-limit"><?php esc_html_e('Suggestions per source and seed', 'keyword-suggest'); ?> <output for="ksug-limit" id="ksug-limit-out"><?php echo (int) $s['limit']; ?></output></label>
+                            <input id="ksug-limit" type="range" min="3" max="25" step="1" name="<?php echo $opt; ?>[limit]" value="<?php echo esc_attr((string) $s['limit']); ?>">
+                            <p class="description"><?php esc_html_e('Lower keeps the list focused; higher finds more long-tail phrases.', 'keyword-suggest'); ?></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ksug-card">
+                    <header><h2><?php esc_html_e('Show the suggestions box on', 'keyword-suggest'); ?></h2></header>
+                    <div class="ksug-tiles">
                         <?php foreach ($types as $t) : ?>
-                            <label style="display:inline-block;min-width:11em;margin:0 0 6px">
-                                <input type="checkbox" name="<?php echo esc_attr(KSUG_OPTION); ?>[post_types][]" value="<?php echo esc_attr($t->name); ?>" <?php checked(in_array($t->name, $s['post_types'], true)); ?>>
-                                <?php echo esc_html($t->labels->singular_name); ?>
+                            <label class="ksug-tile">
+                                <input type="checkbox" name="<?php echo $opt; ?>[post_types][]" value="<?php echo esc_attr($t->name); ?>" <?php checked(in_array($t->name, $s['post_types'], true)); ?>>
+                                <span class="ksug-tile-body"><span class="dashicons <?php echo esc_attr($t->menu_icon && str_starts_with((string) $t->menu_icon, 'dashicons-') ? $t->menu_icon : 'dashicons-admin-post'); ?>"></span><span><?php echo esc_html($t->labels->singular_name); ?></span></span>
                             </label>
                         <?php endforeach; ?>
-                    </td>
-                </tr>
-            </table>
-            <?php submit_button(); ?>
-        </form>
-        <p class="description">
-            <?php
-            printf(
-                /* translators: %s: link to GitHub */
-                esc_html__('Suggestions come from each engine\'s public autocomplete and are fetched by your server. Source and web version: %s', 'keyword-suggest'),
-                '<a href="https://github.com/rmak78/keyword-suggest-tool" target="_blank" rel="noopener">github.com/rmak78/keyword-suggest-tool</a>'
-            );
-            ?>
-        </p>
+                    </div>
+                </section>
+
+                <?php submit_button(__('Save settings', 'keyword-suggest'), 'primary ksug-save'); ?>
+            </form>
+
+            <aside class="ksug-side">
+                <section class="ksug-card">
+                    <header><h2><?php esc_html_e('Test sources from this server', 'keyword-suggest'); ?></h2></header>
+                    <p class="description"><?php esc_html_e('Runs one live query per source so you can see what works on your hosting.', 'keyword-suggest'); ?></p>
+                    <button type="button" class="button" id="ksug-test"><?php esc_html_e('Run test', 'keyword-suggest'); ?></button>
+                    <span class="spinner" id="ksug-test-spinner"></span>
+                    <table class="ksug-health" id="ksug-health" hidden>
+                        <tbody></tbody>
+                    </table>
+                </section>
+
+                <section class="ksug-card ksug-howto">
+                    <header><h2><?php esc_html_e('How it works', 'keyword-suggest'); ?></h2></header>
+                    <ol>
+                        <li><?php esc_html_e('Open a post or product. The Keyword Suggestions box sits below the editor (in the block editor, expand the Meta Boxes bar).', 'keyword-suggest'); ?></li>
+                        <li><?php esc_html_e('Seeds are filled from your title and content. Edit them, pick sources, click Get suggestions.', 'keyword-suggest'); ?></li>
+                        <li><?php esc_html_e('Click any suggestion to add it as a tag, set it as the focus keyword, insert it at the cursor, or copy it.', 'keyword-suggest'); ?></li>
+                    </ol>
+                    <p class="ksug-links">
+                        <a href="https://github.com/rmak78/keyword-suggest-tool" target="_blank" rel="noopener"><?php esc_html_e('Documentation & source', 'keyword-suggest'); ?></a> ·
+                        <a href="https://github.com/rmak78/keyword-suggest-tool/issues" target="_blank" rel="noopener"><?php esc_html_e('Report a problem', 'keyword-suggest'); ?></a> ·
+                        <a href="https://bixisoft.com" target="_blank" rel="noopener">Bixisoft</a>
+                    </p>
+                </section>
+            </aside>
+        </div>
+        <p class="description ksug-footnote"><?php esc_html_e('Suggestions come from each engine\'s public autocomplete and are not affiliated with or endorsed by those companies.', 'keyword-suggest'); ?></p>
     </div>
     <?php
 }
+
+add_action('admin_enqueue_scripts', static function (string $hook): void {
+    if ($hook !== 'settings_page_keyword-suggest') {
+        return;
+    }
+    wp_enqueue_style('dashicons');
+    wp_enqueue_style('keyword-suggest-settings', KSUG_URL . 'admin/css/keyword-suggest-settings.css', [], KSUG_VERSION);
+    wp_enqueue_script('keyword-suggest-settings', KSUG_URL . 'admin/js/keyword-suggest-settings.js', ['jquery'], KSUG_VERSION, true);
+    wp_localize_script('keyword-suggest-settings', 'KSUG_SETTINGS', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('ksug'),
+        'engines' => array_keys(ksug_engines()),
+        'i18n' => [
+            'ok' => __('OK', 'keyword-suggest'),
+            'fail' => __('Failed', 'keyword-suggest'),
+            'testing' => __('Testing…', 'keyword-suggest'),
+            'results' => __('results', 'keyword-suggest'),
+        ],
+    ]);
+});
+
+add_action('wp_ajax_ksug_health', static function (): void {
+    check_ajax_referer('ksug', 'nonce');
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Forbidden'], 403);
+    }
+    $engine = isset($_POST['engine']) ? sanitize_key((string) $_POST['engine']) : '';
+    if (!isset(ksug_engines()[$engine])) {
+        wp_send_json_error(['message' => 'Unknown engine'], 400);
+    }
+    $r = \KeywordSuggest\run_engine($engine, 'running shoes', ksug_settings()['locale'], false);
+    wp_send_json_success([
+        'engine' => $engine,
+        'ok' => $r['error'] === null && count($r['suggestions']) > 0,
+        'count' => count($r['suggestions']),
+        'sample' => array_slice($r['suggestions'], 0, 3),
+        'error' => $r['error'] ?? (count($r['suggestions']) === 0 ? 'No suggestions returned' : null),
+        'ms' => $r['ms'],
+    ]);
+});
 
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), static function (array $links): array {
     array_unshift($links, '<a href="' . esc_url(admin_url('options-general.php?page=keyword-suggest')) . '">' . esc_html__('Settings', 'keyword-suggest') . '</a>');

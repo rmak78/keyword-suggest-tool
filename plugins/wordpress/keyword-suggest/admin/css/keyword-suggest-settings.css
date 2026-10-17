@@ -1,0 +1,60 @@
+.ksug-settings { max-width: 1180px; }
+.ksug-hero { display: flex; gap: 16px; align-items: center; margin: 12px 0 20px; }
+.ksug-hero-icon svg { display: block; border-radius: 12px; box-shadow: 0 6px 18px rgba(124, 58, 237, .25); }
+.ksug-hero h1 { margin: 0 0 4px; padding: 0; font-size: 24px; line-height: 1.2; display: flex; align-items: center; gap: 10px; }
+.ksug-hero p { margin: 0; color: #50575e; max-width: 70ch; }
+.ksug-version { font-size: 11px; font-weight: 600; background: #f0f0f1; color: #50575e; border-radius: 999px; padding: 2px 8px; }
+
+.ksug-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .ksug-grid { grid-template-columns: 1fr; } }
+
+.ksug-card { background: #fff; border: 1px solid #dcdcde; border-radius: 10px; padding: 18px 20px 20px; margin-bottom: 20px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.ksug-card header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.ksug-card h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.ksug-card > .description { margin: 0 0 14px; }
+.ksug-card-actions { font-size: 12px; color: #a7aaad; }
+.ksug-card-actions .button-link { font-size: 12px; text-decoration: none; }
+
+.ksug-group { margin-top: 12px; }
+.ksug-group-title { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #787c82; margin-bottom: 8px; }
+.ksug-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.ksug-tile { position: relative; display: block; cursor: pointer; }
+.ksug-tile input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ksug-tile-body { display: flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid #dcdcde; border-radius: 8px; background: #fafafa; font-size: 13px; color: #1d2327; transition: border-color .15s, background .15s, box-shadow .15s; }
+.ksug-tile:hover .ksug-tile-body { border-color: #a78bfa; background: #fff; }
+.ksug-tile input:checked + .ksug-tile-body { border-color: #7c3aed; background: #f5f3ff; box-shadow: inset 0 0 0 1px #7c3aed; font-weight: 600; }
+.ksug-tile input:focus-visible + .ksug-tile-body { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #7c3aed; }
+.ksug-tile-body .dashicons { color: #787c82; }
+.ksug-tile-status { margin-left: auto; font-style: normal; font-size: 11px; color: #787c82; }
+.ksug-tile-status.is-ok { color: #00a32a; }
+.ksug-tile-status.is-fail { color: #d63638; }
+
+.ksug-dot { width: 10px; height: 10px; border-radius: 50%; background: #8c8f94; flex: none; }
+.ksug-dot-google { background: #3b82f6; } .ksug-dot-bing { background: #14b8a6; } .ksug-dot-yahoo { background: #a855f7; }
+.ksug-dot-duckduckgo { background: #f97316; } .ksug-dot-qwant { background: #0ea5e9; } .ksug-dot-yandex { background: #ef4444; }
+.ksug-dot-youtube { background: #f43f5e; } .ksug-dot-amazon { background: #f59e0b; } .ksug-dot-ebay { background: #84cc16; }
+.ksug-dot-wikipedia { background: #64748b; } .ksug-dot-appstore { background: #6366f1; }
+
+.ksug-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 782px) { .ksug-fields { grid-template-columns: 1fr; } }
+.ksug-field label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
+.ksug-field select { width: 100%; max-width: none; }
+.ksug-field input[type=range] { width: 100%; accent-color: #7c3aed; }
+.ksug-field output { font-weight: 700; color: #7c3aed; }
+.ksug-field .description { margin: 6px 0 0; }
+
+.ksug-save.button-primary { background: #7c3aed; border-color: #6d28d9; padding: 4px 18px; }
+.ksug-save.button-primary:hover, .ksug-save.button-primary:focus { background: #6d28d9; border-color: #5b21b6; }
+
+.ksug-side .spinner { float: none; margin: 0 0 0 6px; vertical-align: middle; }
+.ksug-health { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+.ksug-health td { padding: 6px 4px; border-top: 1px solid #f0f0f1; vertical-align: top; }
+.ksug-health td:first-child { white-space: nowrap; font-weight: 600; }
+.ksug-health .is-ok { color: #00a32a; font-weight: 600; }
+.ksug-health .is-fail { color: #d63638; font-weight: 600; }
+.ksug-health small { color: #787c82; display: block; }
+
+.ksug-howto ol { margin: 8px 0 0 18px; }
+.ksug-howto li { margin-bottom: 8px; color: #3c434a; }
+.ksug-links { margin: 12px 0 0; font-size: 12px; }
+.ksug-footnote { margin-top: 4px; color: #787c82; }
