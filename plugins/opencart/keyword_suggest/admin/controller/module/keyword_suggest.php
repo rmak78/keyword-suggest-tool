@@ -60,7 +60,7 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
     {
         $this->load->language(self::ROUTE);
         $this->document->setTitle($this->language->get('heading_title'));
-        $this->document->addStyle(HTTP_CATALOG . 'extension/keyword_suggest/admin/view/stylesheet/keyword_suggest.css?v=2.1.0');
+        $this->document->addStyle(HTTP_CATALOG . 'extension/keyword_suggest/admin/view/stylesheet/keyword_suggest.css?v=2.1.1');
         $this->loadApi();
 
         $token = 'user_token=' . $this->session->data['user_token'];
@@ -86,7 +86,7 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
         $data['engines'] = self::ENGINES;
         $data['locales'] = \KeywordSuggest\KS_LOCALE_LABELS;
         $data['health'] = html_entity_decode($this->url->link(self::ROUTE . '.health', $token), ENT_QUOTES, 'UTF-8');
-        $data['version'] = '2.1.0';
+        $data["version"] = "2.1.1";
         $data['assets'] = HTTP_CATALOG . 'extension/keyword_suggest/admin/view/';
 
         $data['header'] = $this->load->controller('common/header');
@@ -203,9 +203,9 @@ class KeywordSuggest extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $inject = "\n<link rel=\"stylesheet\" href=\"{$base}stylesheet/keyword_suggest.css?v=2.1.0\">"
+        $inject = "\n<link rel=\"stylesheet\" href=\"{$base}stylesheet/keyword_suggest.css?v=2.1.1\">"
             . "\n<script>window.KSUG_OC = " . json_encode($config, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ";</script>"
-            . "\n<script src=\"{$base}javascript/keyword_suggest.js?v=2.1.0\"></script>\n";
+            . "\n<script src=\"{$base}javascript/keyword_suggest.js?v=2.1.1\"></script>\n";
 
         $pos = strripos($output, '</body>');
         $output = $pos === false ? $output . $inject : substr_replace($output, $inject, $pos, 0);

@@ -31,6 +31,8 @@ const KS_LOCALES = [
     'ja-JP' => ['ja', 'JP'],
 ];
 
+require_once __DIR__ . '/transport.php';
+
 /** Human-readable names for KS_LOCALES. */
 const KS_LOCALE_LABELS = [
     'en-US' => 'English (United States)',
@@ -114,63 +116,35 @@ function clean_query(?string $q): ?string
     return $q;
 }
 
-function cache_dir(): ?string
-{
-    $dir = sys_get_temp_dir() . '/keyword-suggest-cache';
-    if (!is_dir($dir) && !@mkdir($dir, 0700, true)) {
-        return null;
-    }
-    return is_writable($dir) ? $dir : null;
-}
-
 /**
- * Perform a GET with curl. Returns [body, error, httpStatus].
+ * Perform a GET through the transport (curl, or wp_remote_get in WordPress),
+ * with a one-hour cache keyed by URL. Returns [body, error, httpStatus].
  * @param string[] $headers
  * @return array{0: ?string, 1: ?string, 2: int}
  */
 function http_get(string $url, array $headers = [], bool $useCache = true): array
 {
-    $cacheFile = null;
-    if ($useCache && ($dir = cache_dir()) !== null) {
-        $cacheFile = $dir . '/' . sha1($url) . '.json';
-        if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < KS_CACHE_TTL_SECONDS) {
-            $cached = file_get_contents($cacheFile);
-            if ($cached !== false) {
-                return [$cached, null, 200];
-            }
+    $key = sha1($url);
+    if ($useCache) {
+        $cached = cache_get($key, KS_CACHE_TTL_SECONDS);
+        if ($cached !== null) {
+            return [$cached, null, 200];
         }
     }
 
-    if (!function_exists('curl_init')) {
-        return [null, 'PHP curl extension is not installed on this server', 0];
-    }
+    $headers = array_merge(['Accept: */*', 'Accept-Language: en-US,en;q=0.8'], $headers);
+    [$body, $err, $status] = transport_get($url, $headers, KS_TIMEOUT_SECONDS, KS_USER_AGENT);
 
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_MAXREDIRS => 3,
-        CURLOPT_CONNECTTIMEOUT => KS_TIMEOUT_SECONDS,
-        CURLOPT_TIMEOUT => KS_TIMEOUT_SECONDS,
-        CURLOPT_USERAGENT => KS_USER_AGENT,
-        CURLOPT_ENCODING => '',
-        CURLOPT_HTTPHEADER => array_merge(['Accept: */*', 'Accept-Language: en-US,en;q=0.8'], $headers),
-    ]);
-    $body = curl_exec($ch);
-    $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    $err = curl_error($ch);
-    curl_close($ch);
-
-    if ($body === false || $body === null) {
-        return [null, $err !== '' ? $err : 'Request failed', $status];
+    if ($body === null) {
+        return [null, $err ?? 'Request failed', $status];
     }
     if ($status >= 400) {
         return [null, "Upstream returned HTTP $status", $status];
     }
-    if ($cacheFile !== null) {
-        @file_put_contents($cacheFile, (string) $body, LOCK_EX);
+    if ($useCache) {
+        cache_set($key, $body, KS_CACHE_TTL_SECONDS);
     }
-    return [(string) $body, null, $status];
+    return [$body, null, $status];
 }
 
 /**
@@ -186,7 +160,7 @@ function normalise_suggestions(array $items, int $limit = 50): array
         if (!is_string($item)) {
             continue;
         }
-        $s = html_entity_decode(strip_tags($item), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $s = html_entity_decode(strip_html($item), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $s = trim(preg_replace('/\s+/u', ' ', $s) ?? '');
         if ($s === '' || preg_match('#^https?://#i', $s)) {
             continue;
