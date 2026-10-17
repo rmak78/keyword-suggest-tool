@@ -22,7 +22,7 @@ return static function (string $q, string $lang, string $country): array {
                 'command' => $q,
             ]), [], false);
             if ($alt === null) {
-                throw new \RuntimeException($err ?? 'Yahoo fallback failed');
+                throw new \RuntimeException('Yahoo fallback request failed');
             }
             return parse_opensearch($alt);
         },

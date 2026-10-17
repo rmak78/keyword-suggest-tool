@@ -18,20 +18,32 @@ WP="$ROOT/plugins/wordpress/keyword-suggest"
 OC="$ROOT/plugins/opencart/keyword_suggest"
 
 copy_api() {
-  local dest="$1"
+  local dest="$1" flavour="$2"
   rm -rf "$dest"
   mkdir -p "$dest/engines"
   cp "$API/lib.php" "$API/keyphrases.php" "$dest/"
   cp "$API"/engines/*.php "$dest/engines/"
-  # Nothing in the bundled copy should be web-reachable on its own.
-  printf 'Require all denied\n' > "$dest/.htaccess"
+  if [[ "$flavour" == "wp" ]]; then
+    # WordPress: HTTP API + transients instead of curl + files, and a
+    # direct-access guard in every bundled file (wordpress.org requirement).
+    cp "$API/transport-wp.php" "$dest/transport.php"
+    for f in "$dest"/*.php "$dest"/engines/*.php; do
+      case "$f" in */transport.php) continue ;; esac
+      sed -i "0,/^namespace KeywordSuggest;$/s//namespace KeywordSuggest;\n\nif (!defined('ABSPATH')) {\n    exit;\n}/" "$f"
+    done
+  else
+    cp "$API/transport.php" "$dest/transport.php"
+  fi
+  # Nothing in the bundled copy should be web-reachable on its own
+  # (wordpress.org forbids hidden files, so the WP copy relies on the ABSPATH guards).
+  [[ "$flavour" == "wp" ]] || printf 'Require all denied\n' > "$dest/.htaccess"
   printf '<?php\n// Silence is golden.\n' > "$dest/index.php"
   printf '<?php\n// Silence is golden.\n' > "$dest/engines/index.php"
 }
 
 echo "Syncing shared API (v$VERSION) into plugins…"
-copy_api "$WP/includes/api"
-copy_api "$OC/system/library/keyword_suggest/api"
+copy_api "$WP/includes/api" wp
+copy_api "$OC/system/library/keyword_suggest/api" oc
 
 # Keep the version headers in step with package.json.
 sed -i -E "s/^( \* Version:\s+).*/\1$VERSION/" "$WP/keyword-suggest.php"

@@ -3,7 +3,7 @@
  * Plugin Name: Keyword Suggest
  * Plugin URI:  https://github.com/rmak78/keyword-suggest-tool
  * Description: Suggests keywords for your posts and products from Google, YouTube, Bing, Amazon, eBay and other autocomplete sources based on what you are writing. Click a suggestion to add it as a tag, set it as the SEO focus keyword, or insert it into the content.
- * Version:     2.1.0
+ * Version:     2.1.1
  * Author:      Bixisoft
  * Author URI:  https://bixisoft.com
  * License:     GPL-2.0-or-later
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('KSUG_VERSION', '2.1.0');
+define('KSUG_VERSION', '2.1.1');
 define('KSUG_FILE', __FILE__);
 define('KSUG_DIR', plugin_dir_path(__FILE__));
 define('KSUG_URL', plugin_dir_url(__FILE__));
@@ -160,38 +160,39 @@ add_action('admin_enqueue_scripts', static function (string $hook): void {
 
 // --- AJAX -------------------------------------------------------------------
 
-function ksug_check_request(): void
+function ksug_require_editor(): void
 {
-    check_ajax_referer('ksug', 'nonce');
     if (!current_user_can('edit_posts')) {
         wp_send_json_error(['message' => 'Forbidden'], 403);
     }
 }
 
 add_action('wp_ajax_ksug_seeds', static function (): void {
-    ksug_check_request();
-    $title = isset($_POST['title']) ? wp_unslash((string) $_POST['title']) : '';
-    $content = isset($_POST['content']) ? wp_unslash((string) $_POST['content']) : '';
+    check_ajax_referer('ksug', 'nonce');
+    ksug_require_editor();
+    $title = isset($_POST['title']) ? sanitize_text_field(wp_unslash($_POST['title'])) : '';
+    $content = isset($_POST['content']) ? wp_kses_post(wp_unslash($_POST['content'])) : '';
     $seeds = \KeywordSuggest\extract_keyphrases($title, $content, 8);
     wp_send_json_success(['seeds' => $seeds]);
 });
 
 add_action('wp_ajax_ksug_fetch', static function (): void {
-    ksug_check_request();
+    check_ajax_referer('ksug', 'nonce');
+    ksug_require_editor();
     $settings = ksug_settings();
 
     $engines = isset($_POST['engines']) ? array_map('sanitize_key', (array) wp_unslash($_POST['engines'])) : [];
     $engines = array_values(array_intersect($engines, array_keys(ksug_engines())));
-    $seedsRaw = isset($_POST['seeds']) ? (array) wp_unslash($_POST['seeds']) : [];
+    $seedsRaw = isset($_POST['seeds']) ? array_map('sanitize_text_field', (array) wp_unslash($_POST['seeds'])) : [];
     $seeds = [];
     foreach ($seedsRaw as $s) {
-        $q = \KeywordSuggest\clean_query(sanitize_text_field((string) $s));
+        $q = \KeywordSuggest\clean_query((string) $s);
         if ($q !== null) {
             $seeds[] = $q;
         }
     }
     $seeds = array_slice(array_values(array_unique($seeds)), 0, 6);
-    $locale = isset($_POST['locale']) ? sanitize_text_field((string) $_POST['locale']) : $settings['locale'];
+    $locale = isset($_POST['locale']) ? sanitize_text_field(wp_unslash($_POST['locale'])) : $settings['locale'];
 
     if (!$engines) {
         wp_send_json_error(['message' => 'No engines selected'], 400);
@@ -273,7 +274,6 @@ function ksug_render_settings_page(): void
     }
     $types = get_post_types(['show_ui' => true], 'objects');
     unset($types['attachment']);
-    $opt = esc_attr(KSUG_OPTION);
     ?>
     <div class="wrap ksug-settings">
         <div class="ksug-hero">
@@ -306,7 +306,7 @@ function ksug_render_settings_page(): void
                             <div class="ksug-tiles">
                                 <?php foreach ($items as $id => $e) : ?>
                                     <label class="ksug-tile">
-                                        <input type="checkbox" name="<?php echo $opt; ?>[engines][]" value="<?php echo esc_attr($id); ?>" <?php checked(in_array($id, $s['engines'], true)); ?>>
+                                        <input type="checkbox" name="<?php echo esc_attr(KSUG_OPTION); ?>[engines][]" value="<?php echo esc_attr($id); ?>" <?php checked(in_array($id, $s['engines'], true)); ?>>
                                         <span class="ksug-tile-body">
                                             <i class="ksug-dot ksug-dot-<?php echo esc_attr($id); ?>"></i>
                                             <span><?php echo esc_html($e['label']); ?></span>
@@ -324,7 +324,7 @@ function ksug_render_settings_page(): void
                     <div class="ksug-fields">
                         <div class="ksug-field">
                             <label for="ksug-locale"><?php esc_html_e('Default market', 'keyword-suggest'); ?></label>
-                            <select id="ksug-locale" name="<?php echo $opt; ?>[locale]">
+                            <select id="ksug-locale" name="<?php echo esc_attr(KSUG_OPTION); ?>[locale]">
                                 <?php foreach (\KeywordSuggest\KS_LOCALES as $code => $_) : ?>
                                     <option value="<?php echo esc_attr($code); ?>" <?php selected($code, $s['locale']); ?>><?php echo esc_html(\KeywordSuggest\KS_LOCALE_LABELS[$code] ?? $code); ?></option>
                                 <?php endforeach; ?>
@@ -333,7 +333,7 @@ function ksug_render_settings_page(): void
                         </div>
                         <div class="ksug-field">
                             <label for="ksug-limit"><?php esc_html_e('Suggestions per source and seed', 'keyword-suggest'); ?> <output for="ksug-limit" id="ksug-limit-out"><?php echo (int) $s['limit']; ?></output></label>
-                            <input id="ksug-limit" type="range" min="3" max="25" step="1" name="<?php echo $opt; ?>[limit]" value="<?php echo esc_attr((string) $s['limit']); ?>">
+                            <input id="ksug-limit" type="range" min="3" max="25" step="1" name="<?php echo esc_attr(KSUG_OPTION); ?>[limit]" value="<?php echo esc_attr((string) $s['limit']); ?>">
                             <p class="description"><?php esc_html_e('Lower keeps the list focused; higher finds more long-tail phrases.', 'keyword-suggest'); ?></p>
                         </div>
                     </div>
@@ -344,7 +344,7 @@ function ksug_render_settings_page(): void
                     <div class="ksug-tiles">
                         <?php foreach ($types as $t) : ?>
                             <label class="ksug-tile">
-                                <input type="checkbox" name="<?php echo $opt; ?>[post_types][]" value="<?php echo esc_attr($t->name); ?>" <?php checked(in_array($t->name, $s['post_types'], true)); ?>>
+                                <input type="checkbox" name="<?php echo esc_attr(KSUG_OPTION); ?>[post_types][]" value="<?php echo esc_attr($t->name); ?>" <?php checked(in_array($t->name, $s['post_types'], true)); ?>>
                                 <span class="ksug-tile-body"><span class="dashicons <?php echo esc_attr($t->menu_icon && str_starts_with((string) $t->menu_icon, 'dashicons-') ? $t->menu_icon : 'dashicons-admin-post'); ?>"></span><span><?php echo esc_html($t->labels->singular_name); ?></span></span>
                             </label>
                         <?php endforeach; ?>
@@ -410,7 +410,7 @@ add_action('wp_ajax_ksug_health', static function (): void {
     if (!current_user_can('manage_options')) {
         wp_send_json_error(['message' => 'Forbidden'], 403);
     }
-    $engine = isset($_POST['engine']) ? sanitize_key((string) $_POST['engine']) : '';
+    $engine = isset($_POST['engine']) ? sanitize_key(wp_unslash($_POST['engine'])) : '';
     if (!isset(ksug_engines()[$engine])) {
         wp_send_json_error(['message' => 'Unknown engine'], 400);
     }

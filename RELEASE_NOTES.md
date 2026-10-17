@@ -1,11 +1,11 @@
-Version 2.1 brings the keyword engine into WordPress and OpenCart. Both plugins bundle the same engine adapters as the web tool, run every request from your own server, and need no API keys.
+Version 2.1 brings the keyword engine into WordPress and OpenCart. (2.1.1: the WordPress plugin now uses the WordPress HTTP API and transients and passes Plugin Check cleanly; no functional change.) Both plugins bundle the same engine adapters as the web tool, run every request from your own server, and need no API keys.
 
 ## Downloads
 
 | File | What it is |
 |---|---|
-| `keyword-suggest-tool-v2.1.0.zip` | Standalone web tool. Upload the contents to any PHP host. |
-| `keyword-suggest-wordpress-v2.1.0.zip` | WordPress plugin. Plugins > Add New > Upload Plugin. |
+| `keyword-suggest-tool-v2.1.1.zip` | Standalone web tool. Upload the contents to any PHP host. |
+| `keyword-suggest-wordpress-v2.1.1.zip` | WordPress plugin. Plugins > Add New > Upload Plugin. |
 | `keyword_suggest.ocmod.zip` | OpenCart 4.x extension. Extensions > Installer > Upload, then Extensions > Modules > Keyword Suggest > Install. |
 
 ## WordPress plugin

@@ -61,6 +61,7 @@ Screenshot captions (must match the `== Screenshots ==` section in `readme.txt`)
 - [x] `uninstall.php` removes the option.
 - [x] GPL-compatible licence, readme.txt with Stable tag matching the plugin header.
 - [x] Human-readable (unminified) JS and CSS.
+- [x] Plugin Check (wordpress.org's reviewer tool) passes with 0 errors / 0 warnings. Re-run after changes: install the *Plugin Check* plugin locally and run `wp plugin check keyword-suggest`.
 - [ ] After approval: `svn co https://plugins.svn.wordpress.org/keyword-suggest`, copy the plugin folder to `trunk/`, assets to `assets/`, tag `2.1.0`, commit.
 
 ---

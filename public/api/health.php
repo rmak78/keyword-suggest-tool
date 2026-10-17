@@ -19,7 +19,7 @@ $locale = isset($_GET['locale']) ? (string) $_GET['locale'] : 'en-US';
 $report = [
     'php' => PHP_VERSION,
     'curl' => function_exists('curl_init'),
-    'cache' => cache_dir() !== null,
+    'cache' => cache_available(),
     'query' => $query,
     'engines' => [],
 ];

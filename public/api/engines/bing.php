@@ -24,7 +24,7 @@ return static function (string $q, string $lang, string $country): array {
                     'cp' => mb_strlen($q),
                 ]), ['Referer: https://www.bing.com/'], false);
                 if ($html === null) {
-                    throw new \RuntimeException($err ?? 'Bing fallback failed');
+                    throw new \RuntimeException('Bing fallback request failed');
                 }
                 if (!preg_match_all('/<span class="sa_tm_text">(.*?)<\/span>/s', $html, $m)) {
                     throw new \RuntimeException('Unexpected response format');

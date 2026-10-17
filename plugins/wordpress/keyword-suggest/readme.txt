@@ -4,7 +4,7 @@ Tags: keywords, seo, tags, autocomplete, woocommerce
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,11 +64,14 @@ Only the seed keywords you fetch suggestions for are sent, to the engines you se
 
 == Changelog ==
 
+= 2.1.1 =
+* Uses the WordPress HTTP API and transients instead of curl and temp files; passes Plugin Check with no errors or warnings.
+
 = 2.1.0 =
 * First WordPress release, sharing the engine adapters with Keyword Suggest Tool v2.
 * Settings page with grouped source tiles and a live source test.
 
 == Upgrade Notice ==
 
-= 2.1.0 =
+= 2.1.1 =
 First release.

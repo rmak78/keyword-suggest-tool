@@ -1,6 +1,6 @@
 {
   "name": "keyword-suggest-tool",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "description": "Keyword suggestion / idea generator pulling autocomplete data from Google, YouTube, Bing, Yahoo, DuckDuckGo, Amazon, eBay, Wikipedia and more.",
   "type": "module",
