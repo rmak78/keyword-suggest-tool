@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 const KS_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 const KS_TIMEOUT_SECONDS = 8;
 const KS_CACHE_TTL_SECONDS = 3600;
@@ -194,7 +196,7 @@ function parse_opensearch(string $body): array
 {
     $data = json_decode($body, true);
     if (!is_array($data) || !isset($data[1]) || !is_array($data[1])) {
-        throw new RuntimeException('Unexpected response format');
+        throw new \RuntimeException('Unexpected response format');
     }
     return $data[1];
 }
@@ -230,7 +232,7 @@ function run_engine(string $id, string $query, string $locale, bool $useCache = 
                 $result['suggestions'] = normalise_suggestions($parsed);
             }
         }
-    } catch (Throwable $e) {
+    } catch (\Throwable $e) {
         $result['error'] = $e->getMessage();
     }
 

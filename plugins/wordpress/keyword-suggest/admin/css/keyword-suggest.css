@@ -1,0 +1,41 @@
+.ksug { font-size: 13px; }
+.ksug-row { margin: 0 0 12px; }
+.ksug-label { display: block; font-weight: 600; margin-bottom: 4px; }
+.ksug-seeds-wrap { display: flex; gap: 6px; }
+.ksug-seeds-wrap input { flex: 1; }
+.ksug-engines .ksug-group { display: inline-block; margin: 0 14px 6px 0; }
+.ksug-engines .ksug-group-label { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #646970; margin-right: 6px; }
+.ksug-engines .ksug-engine { margin-right: 10px; white-space: nowrap; }
+.ksug-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.ksug-controls .spinner { float: none; margin: 0; }
+.ksug-toolbar { display: flex; align-items: center; gap: 10px; }
+.ksug-toolbar input[type="search"] { min-width: 180px; }
+.ksug-count { color: #646970; }
+.ksug-results { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
+.ksug-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #c3c4c7; background: #fff; border-radius: 999px;
+  padding: 4px 10px 4px 8px; font-size: 13px; line-height: 1.3; cursor: pointer; color: #1d2327;
+}
+.ksug-chip:hover { border-color: #2271b1; background: #f0f6fc; }
+.ksug-chip.is-added { border-color: #00a32a; background: #edfaef; color: #1e1e1e; }
+.ksug-check { color: #00a32a; font-weight: 700; }
+.ksug-dots { display: inline-flex; gap: 2px; }
+.ksug-dot { width: 7px; height: 7px; border-radius: 50%; background: #8c8f94; display: inline-block; }
+.ksug-dot-google { background: #3b82f6; }
+.ksug-dot-bing { background: #14b8a6; }
+.ksug-dot-yahoo { background: #a855f7; }
+.ksug-dot-duckduckgo { background: #f97316; }
+.ksug-dot-qwant { background: #0ea5e9; }
+.ksug-dot-yandex { background: #ef4444; }
+.ksug-dot-youtube { background: #f43f5e; }
+.ksug-dot-amazon { background: #f59e0b; }
+.ksug-dot-ebay { background: #84cc16; }
+.ksug-dot-wikipedia { background: #64748b; }
+.ksug-dot-appstore { background: #6366f1; }
+.ksug-categories { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ksug-categories .ksug-label { display: inline; margin: 0 4px 0 0; }
+.ksug-cat { background: #f0f0f1; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+.ksug-notice { margin-top: 10px; padding: 6px 10px; border-left: 4px solid #72aee6; background: #f6f7f7; }
+.ksug-notice-success { border-color: #00a32a; }
+.ksug-notice-error { border-color: #d63638; }

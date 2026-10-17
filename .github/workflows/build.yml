@@ -25,10 +25,19 @@ jobs:
       - run: npm run lint:php
       - run: npm test
       - run: npm run build
+      - run: npm run build:plugins
+      - run: find plugins -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
 
       # Download this from the workflow run and upload its contents to your web host.
       - uses: actions/upload-artifact@v4
         with:
           name: keyword-suggest-tool-dist
           path: dist
+          if-no-files-found: error
+
+      # WordPress plugin zip and OpenCart 4 extension (.ocmod.zip).
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keyword-suggest-plugins
+          path: build/*.zip
           if-no-files-found: error

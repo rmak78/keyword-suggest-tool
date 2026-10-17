@@ -3,6 +3,8 @@
 // Each marketplace has its own completion host and marketplace id (mid).
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 const KS_AMAZON_MARKETS = [
     'US' => ['completion.amazon.com', 'ATVPDKIKX0DER'],
     'GB' => ['completion.amazon.co.uk', 'A1F83G8C2ARO7P'],
@@ -34,7 +36,7 @@ return static function (string $q, string $lang, string $country): array {
         'parse' => static function (string $body): array {
             $data = json_decode($body, true);
             if (!is_array($data) || !isset($data['suggestions']) || !is_array($data['suggestions'])) {
-                throw new RuntimeException('Unexpected response format');
+                throw new \RuntimeException('Unexpected response format');
             }
             return array_map(static fn($r) => is_array($r) ? ($r['value'] ?? '') : (string) $r, $data['suggestions']);
         },

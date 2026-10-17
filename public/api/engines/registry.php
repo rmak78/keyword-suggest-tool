@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return [
     'google' => 'google.php',
     'youtube' => 'youtube.php',

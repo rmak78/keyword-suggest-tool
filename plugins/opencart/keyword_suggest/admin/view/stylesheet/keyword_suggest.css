@@ -1,0 +1,28 @@
+.ksug .ksug-group { display: inline-block; margin: 0 14px 6px 0; }
+.ksug .ksug-group-label { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #6c757d; margin-right: 6px; }
+.ksug .ksug-engine { margin-right: 8px; }
+.ksug .ksug-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.ksug .ksug-toolbar { display: flex; align-items: center; gap: 10px; }
+.ksug .ksug-results { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
+.ksug .ksug-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid #ced4da; background: #fff; border-radius: 999px;
+  padding: 4px 10px 4px 8px; font-size: 13px; line-height: 1.3; cursor: pointer; color: #212529;
+}
+.ksug .ksug-chip:hover { border-color: #0d6efd; background: #f0f6ff; }
+.ksug .ksug-chip.is-added { border-color: #198754; background: #eaf7ef; }
+.ksug .ksug-check { color: #198754; font-weight: 700; }
+.ksug .ksug-dots { display: inline-flex; gap: 2px; }
+.ksug .ksug-dot { width: 7px; height: 7px; border-radius: 50%; background: #adb5bd; display: inline-block; }
+.ksug .ksug-dot-google { background: #3b82f6; }
+.ksug .ksug-dot-bing { background: #14b8a6; }
+.ksug .ksug-dot-yahoo { background: #a855f7; }
+.ksug .ksug-dot-duckduckgo { background: #f97316; }
+.ksug .ksug-dot-qwant { background: #0ea5e9; }
+.ksug .ksug-dot-yandex { background: #ef4444; }
+.ksug .ksug-dot-youtube { background: #f43f5e; }
+.ksug .ksug-dot-amazon { background: #f59e0b; }
+.ksug .ksug-dot-ebay { background: #84cc16; }
+.ksug .ksug-dot-wikipedia { background: #64748b; }
+.ksug .ksug-dot-appstore { background: #6366f1; }
+.ksug .ksug-categories { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }

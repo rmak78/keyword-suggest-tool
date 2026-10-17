@@ -3,6 +3,8 @@
 // client=firefox returns plain JSON: ["query", ["s1", "s2", ...]]
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     return [
         'url' => 'https://suggestqueries.google.com/complete/search?' . http_build_query([
@@ -11,6 +13,6 @@ return static function (string $q, string $lang, string $country): array {
             'hl' => $lang,
             'gl' => $country,
         ]),
-        'parse' => 'parse_opensearch',
+        'parse' => __NAMESPACE__ . '\parse_opensearch',
     ];
 };

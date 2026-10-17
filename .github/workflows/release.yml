@@ -38,6 +38,7 @@ jobs:
       - run: npm run lint:php
       - run: npm test
       - run: npm run build
+      - run: npm run build:plugins
 
       - name: Package dist
         id: pkg
@@ -54,5 +55,8 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: Keyword Suggest Tool ${{ steps.pkg.outputs.tag }}
           body_path: RELEASE_NOTES.md
-          files: keyword-suggest-tool-${{ steps.pkg.outputs.tag }}.zip
+          files: |
+            keyword-suggest-tool-${{ steps.pkg.outputs.tag }}.zip
+            build/keyword-suggest-wordpress-*.zip
+            build/keyword_suggest.ocmod.zip
           fail_on_unmatched_files: true
