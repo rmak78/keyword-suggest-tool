@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 const KS_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 const KS_TIMEOUT_SECONDS = 8;
 const KS_CACHE_TTL_SECONDS = 3600;
@@ -27,6 +29,22 @@ const KS_LOCALES = [
     'nl-NL' => ['nl', 'NL'],
     'pt-BR' => ['pt', 'BR'],
     'ja-JP' => ['ja', 'JP'],
+];
+
+/** Human-readable names for KS_LOCALES. */
+const KS_LOCALE_LABELS = [
+    'en-US' => 'English (United States)',
+    'en-GB' => 'English (United Kingdom)',
+    'en-AU' => 'English (Australia)',
+    'en-CA' => 'English (Canada)',
+    'en-IN' => 'English (India)',
+    'de-DE' => 'Deutsch (Deutschland)',
+    'fr-FR' => 'Français (France)',
+    'es-ES' => 'Español (España)',
+    'it-IT' => 'Italiano (Italia)',
+    'nl-NL' => 'Nederlands (Nederland)',
+    'pt-BR' => 'Português (Brasil)',
+    'ja-JP' => '日本語 (日本)',
 ];
 
 function json_out(array $payload, int $status = 200): void
@@ -194,7 +212,7 @@ function parse_opensearch(string $body): array
 {
     $data = json_decode($body, true);
     if (!is_array($data) || !isset($data[1]) || !is_array($data[1])) {
-        throw new RuntimeException('Unexpected response format');
+        throw new \RuntimeException('Unexpected response format');
     }
     return $data[1];
 }
@@ -230,7 +248,7 @@ function run_engine(string $id, string $query, string $locale, bool $useCache = 
                 $result['suggestions'] = normalise_suggestions($parsed);
             }
         }
-    } catch (Throwable $e) {
+    } catch (\Throwable $e) {
         $result['error'] = $e->getMessage();
     }
 

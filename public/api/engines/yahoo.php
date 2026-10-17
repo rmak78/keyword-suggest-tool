@@ -3,6 +3,8 @@
 // Fallback: the Firefox-format endpoint (["q", ["s1", ...]]).
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     return [
         'url' => 'https://search.yahoo.com/sugg/gossip/gossip-us-ura/?' . http_build_query([
@@ -20,7 +22,7 @@ return static function (string $q, string $lang, string $country): array {
                 'command' => $q,
             ]), [], false);
             if ($alt === null) {
-                throw new RuntimeException($err ?? 'Yahoo fallback failed');
+                throw new \RuntimeException($err ?? 'Yahoo fallback failed');
             }
             return parse_opensearch($alt);
         },

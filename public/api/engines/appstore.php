@@ -3,6 +3,8 @@
 // or JSON {"hints":[{"term":"..."}]} depending on the Accept header.
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     return [
         'url' => 'https://search.itunes.apple.com/WebObjects/MZSearchHints.woa/wa/hints?' . http_build_query([
@@ -19,7 +21,7 @@ return static function (string $q, string $lang, string $country): array {
             if (preg_match_all('/<key>term<\/key>\s*<string>(.*?)<\/string>/s', $body, $m) && count($m[1]) > 0) {
                 return $m[1];
             }
-            throw new RuntimeException('Unexpected response format');
+            throw new \RuntimeException('Unexpected response format');
         },
     ];
 };

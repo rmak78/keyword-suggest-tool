@@ -2,6 +2,8 @@
 // DuckDuckGo autocomplete: type=list returns ["q", ["s1", ...]].
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     return [
         'url' => 'https://duckduckgo.com/ac/?' . http_build_query([

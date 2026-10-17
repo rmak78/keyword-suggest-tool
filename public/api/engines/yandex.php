@@ -2,6 +2,8 @@
 // Yandex suggest, Firefox format: ["q", ["s1", ...]].
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     return [
         'url' => 'https://suggest.yandex.net/suggest-ff.cgi?' . http_build_query([
@@ -10,6 +12,6 @@ return static function (string $q, string $lang, string $country): array {
             'v' => 3,
             'sn' => 20,
         ]),
-        'parse' => 'parse_opensearch',
+        'parse' => __NAMESPACE__ . '\parse_opensearch',
     ];
 };

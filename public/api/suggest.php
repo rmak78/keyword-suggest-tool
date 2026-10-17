@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 require __DIR__ . '/lib.php';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {

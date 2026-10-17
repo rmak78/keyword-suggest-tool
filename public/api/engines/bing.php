@@ -3,6 +3,8 @@
 // Fallback (if primary stops responding): scrape www.bing.com/AS/Suggestions.
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 return static function (string $q, string $lang, string $country): array {
     $market = strtolower($lang) . '-' . strtoupper($country);
     return [
@@ -13,7 +15,7 @@ return static function (string $q, string $lang, string $country): array {
         'parse' => static function (string $body) use ($q, $market): array {
             try {
                 return parse_opensearch($body);
-            } catch (RuntimeException $e) {
+            } catch (\RuntimeException $e) {
                 // Fallback to the HTML suggestions endpoint used by bing.com itself.
                 [$html, $err] = http_get('https://www.bing.com/AS/Suggestions?' . http_build_query([
                     'qry' => $q,
@@ -22,10 +24,10 @@ return static function (string $q, string $lang, string $country): array {
                     'cp' => mb_strlen($q),
                 ]), ['Referer: https://www.bing.com/'], false);
                 if ($html === null) {
-                    throw new RuntimeException($err ?? 'Bing fallback failed');
+                    throw new \RuntimeException($err ?? 'Bing fallback failed');
                 }
                 if (!preg_match_all('/<span class="sa_tm_text">(.*?)<\/span>/s', $html, $m)) {
-                    throw new RuntimeException('Unexpected response format');
+                    throw new \RuntimeException('Unexpected response format');
                 }
                 return $m[1];
             }

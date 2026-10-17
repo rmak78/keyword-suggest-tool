@@ -2,6 +2,8 @@
 // eBay autosuggest: {"res":{"sug":["..."],"categories":["..."]}} (JSONP-wrapped unless callback=0).
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 const KS_EBAY_HOSTS = [
     'US' => 'autosug.ebay.com',
     'GB' => 'autosug.ebay.co.uk',
@@ -54,7 +56,7 @@ return static function (string $q, string $lang, string $country): array {
             }
             $data = json_decode($json, true);
             if (!is_array($data) || !isset($data['res']) || !is_array($data['res'])) {
-                throw new RuntimeException('Unexpected response format');
+                throw new \RuntimeException('Unexpected response format');
             }
             $sug = $data['res']['sug'] ?? [];
             $cats = $data['res']['categories'] ?? [];

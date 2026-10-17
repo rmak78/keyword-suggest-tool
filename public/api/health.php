@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+namespace KeywordSuggest;
+
 require __DIR__ . '/lib.php';
 
 $query = clean_query(isset($_GET['q']) ? (string) $_GET['q'] : 'shoes') ?? 'shoes';

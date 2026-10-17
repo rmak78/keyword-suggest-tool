@@ -1,0 +1,163 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid ksug-settings">
+    <div class="ksug-hero">
+      <div class="ksug-hero-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="48" height="48"><rect width="64" height="64" rx="14" fill="#7c3aed"/><circle cx="28" cy="28" r="12" fill="none" stroke="#fff" stroke-width="5"/><path d="M37 37l11 11" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="46" cy="16" r="3.5" fill="#fbbf24"/><circle cx="14" cy="47" r="2.5" fill="#34d399"/></svg>
+      </div>
+      <div>
+        <p class="mb-1 fs-5 fw-semibold">{{ text_tagline }}</p>
+        <span class="badge rounded-pill text-bg-light fw-semibold">v{{ version }}</span>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <span><i class="fa-solid fa-toggle-on"></i> {{ entry_status }}</span>
+              <div class="form-check form-switch form-switch-lg mb-0">
+                <input type="hidden" name="module_keyword_suggest_status" value="0"/>
+                <input type="checkbox" name="module_keyword_suggest_status" value="1" id="input-status" class="form-check-input"{% if module_keyword_suggest_status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <span><i class="fa-solid fa-globe"></i> {{ entry_engines }}</span>
+              <small class="text-muted"><a href="#" data-ksug-select="all">{{ text_select_all }}</a> · <a href="#" data-ksug-select="none">{{ text_select_none }}</a></small>
+            </div>
+            <div class="card-body">
+              <p class="text-muted small">{{ text_sources_help }}</p>
+              {% for group, items in engine_groups %}
+                <div class="ksug-group">
+                  <div class="ksug-group-title">{{ group }}</div>
+                  <div class="ksug-tiles">
+                    {% for id, engine in items %}
+                      <label class="ksug-tile">
+                        <input type="checkbox" name="module_keyword_suggest_engines[]" value="{{ id }}"{% if id in module_keyword_suggest_engines %} checked{% endif %}/>
+                        <span class="ksug-tile-body"><i class="ksug-dot ksug-dot-{{ id }}"></i><span>{{ engine.label }}</span><em class="ksug-tile-status" data-ksug-status="{{ id }}"></em></span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+              <div class="form-text">{{ entry_engines_help }}</div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-header"><i class="fa-solid fa-sliders"></i> {{ text_suggestions }}</div>
+            <div class="card-body">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <label for="input-locale" class="form-label fw-semibold">{{ entry_locale }}</label>
+                  <select name="module_keyword_suggest_locale" id="input-locale" class="form-select">
+                    {% for code, label in locales %}
+                      <option value="{{ code }}"{% if code == module_keyword_suggest_locale %} selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="form-text">{{ entry_locale_help }}</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="input-limit" class="form-label fw-semibold d-flex justify-content-between">{{ entry_limit }} <output for="input-limit" id="output-limit" class="text-primary fw-bold">{{ module_keyword_suggest_limit }}</output></label>
+                  <input type="range" name="module_keyword_suggest_limit" value="{{ module_keyword_suggest_limit }}" min="3" max="25" step="1" id="input-limit" class="form-range"/>
+                  <div class="form-text">{{ entry_limit_help }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-header"><i class="fa-solid fa-stethoscope"></i> {{ text_test_heading }}</div>
+          <div class="card-body">
+            <p class="text-muted small">{{ text_test_help }}</p>
+            <button type="button" class="btn btn-light btn-sm" id="button-test"><i class="fa-solid fa-play"></i> {{ text_test_button }}</button>
+            <table class="table table-sm ksug-health mt-3 mb-0" id="table-health" hidden><tbody></tbody></table>
+          </div>
+        </div>
+        <div class="card mb-4 ksug-howto">
+          <div class="card-header"><i class="fa-solid fa-circle-question"></i> {{ text_howto_heading }}</div>
+          <div class="card-body">
+            <ol class="ps-3 mb-3">
+              <li>{{ text_howto_1 }}</li>
+              <li>{{ text_howto_2 }}</li>
+              <li>{{ text_howto_3 }}</li>
+            </ol>
+            <p class="small mb-0">
+              <a href="https://github.com/rmak78/keyword-suggest-tool" target="_blank" rel="noopener">{{ text_docs }}</a> ·
+              <a href="https://github.com/rmak78/keyword-suggest-tool/issues" target="_blank" rel="noopener">{{ text_support }}</a> ·
+              <a href="https://bixisoft.com" target="_blank" rel="noopener">Bixisoft</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-muted small">{{ text_footnote }}</p>
+  </div>
+</div>
+<script type="text/javascript"><!--
+(function () {
+  var i18n = { testing: '{{ text_testing|escape('js') }}', ok: '{{ text_ok|escape('js') }}', failed: '{{ text_failed|escape('js') }}', results: '{{ text_results|escape('js') }}' };
+  var engines = {{ engines|json_encode|raw }};
+  var healthUrl = {{ health|json_encode|raw }};
+
+  document.getElementById('input-limit').addEventListener('input', function () {
+    document.getElementById('output-limit').textContent = this.value;
+  });
+  document.querySelectorAll('[data-ksug-select]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var all = this.getAttribute('data-ksug-select') === 'all';
+      document.querySelectorAll('.ksug-tiles input[type=checkbox]').forEach(function (i) { i.checked = all; });
+    });
+  });
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  document.getElementById('button-test').addEventListener('click', function () {
+    var btn = this; btn.disabled = true;
+    var table = document.getElementById('table-health'); table.hidden = false;
+    var tbody = table.querySelector('tbody'); tbody.innerHTML = '';
+    document.querySelectorAll('[data-ksug-status]').forEach(function (e) { e.textContent = ''; e.className = 'ksug-tile-status'; });
+    var queue = Object.keys(engines);
+    (function next() {
+      var id = queue.shift();
+      if (!id) { btn.disabled = false; return; }
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="fw-semibold text-nowrap">' + esc(engines[id].label) + '</td><td class="ksug-health-status">' + esc(i18n.testing) + '</td>';
+      tbody.appendChild(tr);
+      fetch(healthUrl + '&engine=' + encodeURIComponent(id), { credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var ok = !!d.ok;
+          var detail = ok ? d.count + ' ' + i18n.results + ' · ' + d.ms + ' ms<small class="d-block text-muted">' + esc((d.sample || []).join(', ')) + '</small>' : '<small class="d-block text-muted">' + esc(d.error || i18n.failed) + '</small>';
+          tr.querySelector('.ksug-health-status').innerHTML = '<span class="' + (ok ? 'text-success' : 'text-danger') + ' fw-semibold">' + (ok ? i18n.ok : i18n.failed) + '</span> ' + detail;
+          var st = document.querySelector('[data-ksug-status="' + id + '"]');
+          if (st) { st.textContent = ok ? '✓' : '✕'; st.className = 'ksug-tile-status ' + (ok ? 'is-ok' : 'is-fail'); }
+        })
+        .catch(function () { tr.querySelector('.ksug-health-status').innerHTML = '<span class="text-danger fw-semibold">' + esc(i18n.failed) + '</span>'; })
+        .then(next);
+    })();
+  });
+})();
+//--></script>
+{{ footer }}

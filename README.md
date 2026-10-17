@@ -28,7 +28,23 @@ All sources use each engine's public autocomplete endpoint. No API keys, no acco
 - Built-in engine status check so you can see at a glance which engines respond from your server
 - Pre-fill seeds via `?keyword=running+shoes` in the URL
 
-## Deploying to shared hosting (cPanel, Plesk, FastPanel…)
+## WordPress and OpenCart plugins
+
+The same engine ships as a **WordPress plugin** and an **OpenCart 4 extension**. Both add a keyword panel to the editor, propose seed keywords from the title and content you are writing, and let you click a suggestion to add it:
+
+| | Seeds from | Click adds to |
+|---|---|---|
+| WordPress (`plugins/wordpress/keyword-suggest`) | post title + content | post / product tags, Yoast or Rank Math focus keyword, content at cursor, clipboard |
+| OpenCart 4 (`plugins/opencart/keyword_suggest`) | product name, meta title, description | meta tag keywords, product tags, description at cursor, clipboard |
+
+Download the zips from the [latest release](https://github.com/rmak78/keyword-suggest-tool/releases/latest):
+
+- **WordPress**: Plugins > Add New > Upload Plugin > `keyword-suggest-wordpress-*.zip`. Settings under Settings > Keyword Suggest. The box appears below the editor (in the block editor, expand the **Meta Boxes** bar at the bottom).
+- **OpenCart 4**: Extensions > Installer > Upload `keyword_suggest.ocmod.zip`, click Install, then Extensions > Extensions > Modules > Keyword Suggest > Install. The panel appears on the General tab of every product form.
+
+To build the zips yourself: `npm run build:plugins` writes them to `build/`. Directory artwork and listing copy for wordpress.org and the OpenCart Marketplace are in `plugins/*/assets/` and [`docs/directory-submissions.md`](docs/directory-submissions.md). The shared PHP library (`public/api/lib.php`, `keyphrases.php`, `engines/`) is copied into each plugin at build time, so engine fixes land in all three products at once.
+
+## Deploying the web tool to shared hosting (cPanel, Plesk, FastPanel…)
 
 You need PHP 8.0+ with the `curl` extension, which every mainstream host ships.
 
@@ -49,7 +65,8 @@ npm run dev     # Vite dev server on http://localhost:5173, proxies /api to PHP
 Other scripts:
 
 ```bash
-npm test          # Vitest unit tests (crawler, dedupe store, CSV export)
+npm test          # Vitest unit tests (crawler, dedupe store, CSV export) + PHP library tests
+npm run build:plugins  # WordPress + OpenCart packages into build/
 npm run build     # typecheck + production build into dist/
 npm run lint:php  # php -l on every proxy file
 ```
@@ -61,6 +78,10 @@ Stack: TypeScript, Vite 7, Tailwind CSS 4, no runtime JS dependencies. The proxy
 ## Project layout
 
 ```
+plugins/
+  wordpress/keyword-suggest/   WordPress plugin (meta box, AJAX, settings page)
+  opencart/keyword_suggest/    OpenCart 4 extension (module, product form event, AJAX)
+scripts/build-plugins.sh       copies the shared PHP library into both plugins and zips them
 index.html              app shell
 src/
   main.ts               wiring, preferences, health check
@@ -73,9 +94,10 @@ src/
 public/api/
   suggest.php           GET ?engine=google&q=shoes&locale=en-US
   health.php            probes every engine once
-  lib.php               curl helper, validation, caching, normalisation
+  lib.php               curl helper, validation, caching, normalisation (namespace KeywordSuggest)
+  keyphrases.php        seed keyword extraction from title + body text (used by the plugins)
   engines/*.php         one small adapter per engine (URL builder + parser)
-tests/                  Vitest
+tests/                  Vitest (TypeScript) and tests/php (shared PHP library)
 ```
 
 ## When an engine stops working

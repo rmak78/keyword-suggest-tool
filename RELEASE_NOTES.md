@@ -1,36 +1,39 @@
-Complete rebuild of the Keyword Suggest Tool. Version 1 stopped working because its asset files were never shipped and the search engines changed their autocomplete endpoints. Version 2 is a new TypeScript + Tailwind CSS front end with a small PHP proxy, so every engine is called server-side and no API keys are needed.
+Version 2.1 brings the keyword engine into WordPress and OpenCart. Both plugins bundle the same engine adapters as the web tool, run every request from your own server, and need no API keys.
 
-## Install (shared hosting: cPanel, Plesk, FastPanel…)
+## Downloads
 
-1. Download `keyword-suggest-tool-v2.0.0.zip` below.
-2. Unzip and upload its contents to the folder you want, for example `public_html/keyword-suggest/`.
-3. Open the page. The sources panel shows a green dot for every engine that responds from your server.
+| File | What it is |
+|---|---|
+| `keyword-suggest-tool-v2.1.0.zip` | Standalone web tool. Upload the contents to any PHP host. |
+| `keyword-suggest-wordpress-v2.1.0.zip` | WordPress plugin. Plugins > Add New > Upload Plugin. |
+| `keyword_suggest.ocmod.zip` | OpenCart 4.x extension. Extensions > Installer > Upload, then Extensions > Modules > Keyword Suggest > Install. |
 
-Requirements: PHP 8.0+ with the curl extension. Nothing to configure.
+## WordPress plugin
 
-## What's new
+- Adds a **Keyword Suggestions** box to posts, pages and WooCommerce products (block editor and classic editor).
+- Seeds are extracted automatically from the title and content; edit them freely.
+- Click a suggestion to **add it as a tag**, **set it as the focus keyword** (Yoast SEO, Rank Math), **insert it into the content** at the cursor, or copy it. "Add all shown as tags" for bulk.
+- Settings > Keyword Suggest: default sources, market, suggestions per source, which post types show the box, and a one-click **Test sources from this server**.
+- In the block editor the box lives in the collapsible **Meta Boxes** area at the bottom of the editor.
 
-**11 sources**: Google, YouTube, Bing, Yahoo, DuckDuckGo, Qwant, Yandex, Amazon (12 marketplaces), eBay (10 sites, with matching categories), Wikipedia, Apple App Store.
+## OpenCart 4 extension
 
-**Search**
-- Query any number of engines at once; every keyword is tagged with the sources it came from
-- Seed expansion: append a–z, 0–9, or prepend question and modifier words (how, best, vs, near me…)
-- Follow suggestions of suggestions up to two levels deep, with a result cap and per-engine delay
-- Language / market selector that also picks the right Amazon and eBay marketplace
-- Pre-fill seeds from the URL: `?keyword=running+shoes`
+- Adds a **Keyword suggestions** panel to the General tab of the product form.
+- Seeds come from the product name, meta title and description.
+- Click a suggestion to add it to **Meta Tag Keywords**, **Product Tags**, or insert it into the **Description** at the cursor; or copy it. Works per language tab.
+- Extensions > Modules > Keyword Suggest: status, default sources, market, suggestions per source, and a one-click **Test sources from this server**.
+- Tested on OpenCart 4.1.0.4.
 
-**Results**
-- Live filter, filter by source, sort by order found / A–Z / most sources / depth
-- Copy to clipboard, download as CSV (opens cleanly in Excel) or TXT
+## Web tool
 
-**UI**
-- Modern responsive design, light / dark / auto theme
-- Keyboard shortcuts: Ctrl+Enter to start, Esc to stop
-- Built-in engine status check so you can see which sources work from your host
+- No functional change since 2.0.0. The engine adapters are now namespaced (`KeywordSuggest\…`) so they can be bundled inside other software.
 
-**Under the hood**
-- TypeScript, Vite 7, Tailwind CSS 4, no runtime JavaScript dependencies
-- One small PHP adapter per engine under `api/engines/`, so a changed endpoint is a one-file fix
-- Unit tests and a GitHub Actions workflow that builds the deployable `dist/` on every push
+## Directory listings
+
+Artwork (icons, banners, screenshots) and ready-to-paste listing copy for wordpress.org and the OpenCart Marketplace are in `plugins/*/assets/` and `docs/directory-submissions.md`.
+
+## Requirements
+
+PHP 8.0+ with the curl extension. WordPress 6.0+. OpenCart 4.0.2+.
 
 Suggestions come from each engine's public autocomplete and are not affiliated with or endorsed by those companies.

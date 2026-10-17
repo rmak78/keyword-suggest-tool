@@ -3,3 +3,6 @@ dist/
 .vite/
 *.log
 .DS_Store
+plugins/wordpress/keyword-suggest/includes/api/
+plugins/opencart/keyword_suggest/system/library/keyword_suggest/api/
+build/
